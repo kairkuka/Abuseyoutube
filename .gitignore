@@ -1,0 +1,22 @@
+.DS_Store
+node_modules/
+tools/streamscribe/.venv/
+tools/StreamScribe/.venv/
+tools/streamscribe/data/
+tools/StreamScribe/data/
+tools/streamscribe/**/__pycache__/
+tools/StreamScribe/**/__pycache__/
+data/local-form-config.json
+data/*.sqlite
+data/*.sqlite-*
+.env
+
+# Runtime data may include OAuth refresh tokens, encryption material, and account data.
+data/*
+!data/README.md
+
+# Local deployment bundles and generated runtime output.
+*.tar.gz
+*.zip
+.playwright-mcp/
+tools/london-forms/logs/

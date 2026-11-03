@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Control</title>
+  <link rel="stylesheet" href="/manual/styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="app-header">
+      <div class="brand"><span class="brand-mark"></span><div><h1>Account Control</h1><p>Browser sessions. Zero YouTube API quota.</p></div></div>
+      <div id="bridgeStatus" class="bridge waiting"><span></span><strong>Connecting</strong></div>
+    </header>
+    <section class="control-grid">
+      <aside class="channels-panel">
+        <div class="panel-heading"><div><h2>Channels</h2><p id="accountCount">Waiting for Chrome</p></div><button id="refresh" class="icon-button" type="button" title="Refresh" aria-label="Refresh">↻</button></div>
+        <label class="search-box"><span aria-hidden="true">⌕</span><input id="search" type="search" autocomplete="off" placeholder="Find a channel" aria-label="Find a channel"></label>
+        <div class="vault-tools">
+          <select id="savedPicker" aria-label="Saved channel"></select>
+          <button id="addSaved" class="mini-button" type="button">Add</button>
+          <button id="addAllSaved" class="mini-button" type="button">All</button>
+          <button id="syncRoutes" class="mini-button accent" type="button">Sync</button>
+        </div>
+        <div id="accountList" class="account-list" role="listbox" aria-label="Browser accounts"></div>
+      </aside>
+      <section class="chat-panel">
+        <form id="liteForm" class="stream-bar">
+          <span class="youtube-mark">▶</span>
+          <input id="streamUrl" type="url" inputmode="url" autocomplete="off" placeholder="Paste YouTube livestream link" required>
+          <button id="liteStart" class="button primary" type="submit">Open chat</button>
+          <button id="liteStop" class="button subtle" type="button" hidden>Exit Lite</button>
+        </form>
+        <div class="stream-info">
+          <div class="stream-art">LIVE</div>
+          <div><strong id="streamTitle">Livestream chat</strong><p id="streamMeta">Browser-fed chat · no API credits</p></div>
+          <span class="live-badge">LIVE</span>
+        </div>
+        <div id="chatFeed" class="chat-feed" aria-live="polite">
+          <div class="chat-empty"><span>▢</span><h2>Waiting for live chat</h2><p>Open a stream. Messages will appear here from the lightweight browser session.</p></div>
+        </div>
+        <div class="chat-status"><span class="health-dot"></span><span id="chatStatus">Live chat bridge ready</span><span id="liteSummary">Full pages</span></div>
+      </section>
+      <aside class="composer-panel">
+        <div id="emptyState" class="select-empty"><span>◎</span><h2>Choose a channel</h2><p>Search and select exactly one browser account.</p></div>
+        <div id="composer" class="composer" hidden>
+          <div class="sending-as"><div><span>SENDING AS</span><strong id="selectedName"></strong><small id="selectedMeta"></small></div><div id="selectedAvatar" class="selected-avatar"></div></div>
+          <div class="identity-box">
+            <label for="identitySelect">Browser tab username</label>
+            <select id="identitySelect"><option value="">Assign correct username…</option></select>
+            <small id="identityHelp">Saved locally. Account login is not changed.</small>
+          </div>
+          <label class="message-label" for="message">Message</label>
+          <textarea id="message" maxlength="200" placeholder="Write one relevant live-chat message"></textarea>
+          <div class="message-foot"><span id="counter">0 / 200</span><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span></div>
+          <div class="actions"><button id="clear" class="button subtle" type="button">Clear</button><button id="send" class="button primary" type="button">Send message</button></div>
+          <div id="notice" class="notice" hidden></div>
+          <div class="rule"><span>♢</span><div><strong>One channel per send</strong><p>One deliberate click sends only from the selected tab.</p></div></div>
+          <details class="activity-wrap"><summary>Recent activity <span id="sentCount">0</span></summary><div id="activity" class="activity"></div></details>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script src="/manual/app.js"></script>
+</body>
+</html>

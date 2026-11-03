@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Account Control Bridge",
+  "version": "1.2.1",
+  "description": "Connects YouTube live-chat tabs to the local single-account control center.",
+  "permissions": ["tabs", "scripting", "webNavigation", "alarms", "storage"],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://youtube.com/*",
+    "https://m.youtube.com/*",
+    "http://127.0.0.1:8790/*"
+  ],
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {
+    "default_title": "Account Control Bridge"
+  }
+}

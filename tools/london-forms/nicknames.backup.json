@@ -1,0 +1,34 @@
+{
+  "fieldLabel": "",
+  "radioLabel": "Tradeify",
+  "targets": [
+    {
+      "youtubeUsername": "@BUETH",
+      "note": "Brave tab 1"
+    },
+    {
+      "youtubeUsername": "@LAFFICT",
+      "note": "Brave tab 2"
+    },
+    {
+      "youtubeUsername": "@danielr3473",
+      "note": "Brave tab 3"
+    },
+    {
+      "youtubeUsername": "@ArmanTrades11",
+      "note": "Brave tab 4"
+    },
+    {
+      "youtubeUsername": "@BlinkDesign-y5r",
+      "note": "Brave tab 5"
+    },
+    {
+      "youtubeUsername": "@TIMGRINS",
+      "note": "Brave tab 6"
+    },
+    {
+      "youtubeUsername": "@TraderofSMCmethod",
+      "note": "Brave tab 7"
+    }
+  ]
+}

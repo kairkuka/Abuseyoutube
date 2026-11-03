@@ -1,0 +1,20 @@
+{
+  "name": "account-control-center",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Unified diploma Account Control Center with Google OAuth, YouTube live chat, AI form scanner, and local Chrome account matching.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "bridge": "node server.js",
+    "mock": "node server.js",
+    "check": "node --check server.js && node --check market-news-tracker.js && node --check bridge.js && node --check youtube-oauth.js && node --check local-form-automation.js && node --check local-form/app.js && node --check accounts/app.js && node --check public/app.js && node --check manual/app.js && node --check extension/service-worker.js",
+    "test": "node tests/local-form-automation.test.js && node tests/oauth-identity.test.js && node tests/market-news-tracker.test.js"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.4",
+    "@grpc/proto-loader": "^0.8.0"
+  }
+}

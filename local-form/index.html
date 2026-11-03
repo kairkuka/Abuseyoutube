@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Form Scanner · Account Control Center</title>
+  <link rel="stylesheet" href="/local-form/styles.css?v=oauth-1">
+</head>
+<body>
+  <main class="page">
+    <nav class="module-nav" aria-label="Разделы платформы">
+      <a href="/accounts/">Accounts</a>
+      <a class="active" href="/local-form/">Form Scanner</a>
+      <a href="/live/">Live Center</a>
+    </nav>
+
+    <header>
+      <div>
+        <p class="eyebrow">Account Control Center</p>
+        <h1>Form Scanner</h1>
+        <p class="muted">Каждый Chrome-профиль связывается с тем же Google OAuth-аккаунтом, который используется в Live Center. Пароли не читаются и не сохраняются.</p>
+      </div>
+      <button id="refresh" class="secondary">Пересканировать</button>
+    </header>
+
+    <section class="card status-grid" id="statusCard">
+      <div><span>Google OAuth</span><strong id="oauthAccounts">0 аккаунтов</strong></div>
+      <div><span>Chrome</span><strong id="chromeStatus">—</strong></div>
+      <div><span>ИИ</span><strong id="aiStatus">—</strong></div>
+      <div><span>Открыто окон</span><strong id="openBrowsers">0</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>1. Ссылка и AI-промпт</h2>
+          <p class="muted">По умолчанию сканер сам находит первые три видимых текстовых поля на странице.</p>
+        </div>
+      </div>
+      <div class="form-grid">
+        <label class="full">Ссылка на форму
+          <input id="targetUrl" type="url" placeholder="https://example.com/form">
+        </label>
+        <label class="full">Промпт для второго поля
+          <textarea id="aiPrompt" rows="5" placeholder="Например: напиши короткий уникальный ответ по теме формы. Верни только текст ответа."></textarea>
+        </label>
+        <label>Макс. длина AI-ответа
+          <input id="aiMaxChars" type="number" min="10" max="1000" value="180">
+        </label>
+      </div>
+      <details class="advanced">
+        <summary>Точная настройка полей (необязательно)</summary>
+        <p class="muted">Если автоопределение не подходит, укажи все три CSS selector. Если оставить все пустыми — работает автоматический сканер.</p>
+        <div class="form-grid">
+          <label>Selector — поле 1<input id="selectorEmail" placeholder='input[name="email"]'></label>
+          <label>Selector — AI-поле<input id="selectorAi" placeholder='textarea[name="answer"]'></label>
+          <label>Selector — поле 3<input id="selectorNickname" placeholder='input[name="nickname"]'></label>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>2. Аккаунты и значения</h2>
+          <p class="muted">Один Google OAuth-аккаунт = один YouTube-канал = один Chrome-профиль. Field 1 и Field 3 задаются отдельно для каждого аккаунта.</p>
+        </div>
+        <button id="save" class="secondary">Сохранить</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Вкл.</th><th>Chrome profile</th><th>Google / YouTube</th><th>Field 1</th><th>Field 3</th></tr></thead>
+          <tbody id="profiles"></tbody>
+        </table>
+      </div>
+      <p class="muted hint">Нет нужного аккаунта? Сначала добавь его через <a href="/accounts/">Accounts → Connect Google account</a>, затем войди этим же Gmail в отдельный Chrome-профиль.</p>
+    </section>
+
+    <section class="card actions">
+      <div>
+        <h2>3. Предпросмотр</h2>
+        <p class="muted">ИИ создаст отдельный ответ для каждого выбранного аккаунта. Браузеры пока не открываются.</p>
+      </div>
+      <button id="preview" class="primary">Сгенерировать предпросмотр</button>
+    </section>
+
+    <section class="card hidden" id="previewCard">
+      <div class="section-title">
+        <div>
+          <h2>Проверка перед запуском</h2>
+          <p class="muted">После запуска откроются отдельные локальные копии уже залогиненных Chrome-профилей. Submit автоматически не нажимается.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Аккаунт</th><th>Field 1</th><th>AI / Field 2</th><th>Field 3</th></tr></thead>
+          <tbody id="previewRows"></tbody>
+        </table>
+      </div>
+      <div class="button-row">
+        <button id="run" class="primary danger-safe">Открыть аккаунты и заполнить</button>
+        <button id="close" class="secondary">Закрыть запущенные окна</button>
+      </div>
+    </section>
+
+    <div id="message" class="message hidden"></div>
+  </main>
+  <script src="/local-form/app.js?v=oauth-1"></script>
+</body>
+</html>

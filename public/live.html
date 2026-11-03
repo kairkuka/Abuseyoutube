@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Control Center</title>
+  <link rel="stylesheet" href="/styles.css?v=app-23">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <h1>Account Control</h1>
+              <p>Google OAuth multi-account live interaction center.</p>
+        </div>
+      </div>
+      <div class="top-actions" aria-label="Tools">
+        <button class="button compact secondary" id="admin-open" type="button">Admin</button>
+        <button class="button compact secondary" id="mff-open" type="button">Rows</button>
+      </div>
+      <div class="right-actions">
+        <button class="button compact secondary notification-button" id="notifications-open" type="button">
+          Notifications
+          <span id="notifications-badge" hidden>0</span>
+        </button>
+        <button class="button compact secondary" id="london-forms-open" type="button">London Forms</button>
+        <button class="button compact primary" id="form-watch-open" type="button">Form Scanner</button>
+        <div class="connection" id="connection"><span></span><strong>Connecting</strong></div>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <aside class="account-pane" aria-label="Connected channels">
+        <div class="pane-head">
+          <div>
+            <h2>Channels</h2>
+            <p id="account-count">Checking connections</p>
+          </div>
+          <button class="icon-button" id="refresh" aria-label="Refresh channels" title="Refresh channels">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg>
+          </button>
+        </div>
+
+        <section class="setup-panel" id="setup-panel">
+          <div id="oauth-missing">
+            <strong>Google API setup needed</strong>
+            <p>Import the Desktop OAuth JSON from Google Cloud.</p>
+            <label class="button compact secondary file-button" for="oauth-file">Import OAuth JSON</label>
+            <input id="oauth-file" type="file" accept="application/json,.json" hidden>
+          </div>
+          <div class="connect-ready" id="oauth-ready" hidden>
+            <span>Connections stored securely</span>
+            <button class="button compact secondary" id="add-account" type="button">Add</button>
+          </div>
+        </section>
+
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="search" type="search" autocomplete="off" placeholder="Find a channel" aria-label="Search connected channels">
+          <kbd>/</kbd>
+        </label>
+        <div class="account-list" id="account-list" role="listbox" aria-label="Choose one sending channel"></div>
+      </aside>
+
+      <section class="chat-pane" aria-label="YouTube live chat">
+        <form class="stream-bar" id="stream-form">
+          <label class="visually-hidden" for="stream-url">YouTube livestream link</label>
+          <span class="youtube-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M21.4 6.2a2.9 2.9 0 0 0-2-2C17.6 3.7 12 3.7 12 3.7s-5.6 0-7.4.5a2.9 2.9 0 0 0-2 2A30 30 0 0 0 2.1 12a30 30 0 0 0 .5 5.8 2.9 2.9 0 0 0 2 2c1.8.5 7.4.5 7.4.5s5.6 0 7.4-.5a2.9 2.9 0 0 0 2-2 30 30 0 0 0 .5-5.8 30 30 0 0 0-.5-5.8Z"/><path d="m10 15.5 5-3.5-5-3.5v7Z"/></svg>
+          </span>
+          <input id="stream-url" type="url" autocomplete="off" placeholder="Paste YouTube livestream link">
+          <button class="button primary" id="open-stream" type="submit">Connect</button>
+        </form>
+
+        <form class="subscribe-bar" id="subscribe-form" hidden>
+          <label class="visually-hidden" for="subscribe-url">YouTube channel link</label>
+          <span class="subscribe-label">Subscribe</span>
+          <input id="subscribe-url" type="text" autocomplete="off" placeholder="Paste YouTube channel link or @handle">
+          <a class="button secondary" id="open-subscribe" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">Open channel</a>
+        </form>
+
+        <section class="subscribe-checklist" id="subscribe-checklist" hidden>
+          <header>
+            <div>
+              <strong>Manual checklist</strong>
+              <span id="subscribe-progress">0 / 0 done</span>
+            </div>
+            <button class="button compact secondary" id="subscribe-reset" type="button">Reset</button>
+          </header>
+          <div class="subscribe-rows" id="subscribe-rows"></div>
+        </section>
+
+        <div class="stream-summary" id="stream-summary" hidden>
+          <img id="stream-thumbnail" alt="" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" referrerpolicy="no-referrer">
+          <div>
+            <strong id="stream-title"></strong>
+            <p><span id="stream-channel"></span><span id="viewer-count"></span></p>
+          </div>
+          <span class="live-badge">Live</span>
+        </div>
+
+        <div class="chat-feed" id="chat-feed" role="log" aria-live="polite" aria-relevant="additions">
+          <div class="chat-empty" id="chat-empty">
+            <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M12 14h40v29H29L18 52v-9h-6V14Z"/><path d="M22 25h20M22 33h13"/></svg>
+            <h2>Paste a livestream link</h2>
+            <p>Only your sent messages will appear here. Public live chat is not read.</p>
+          </div>
+        </div>
+
+        <footer class="chat-footer">
+          <span class="chat-state" id="chat-state"><i></i> Waiting for a livestream</span>
+          <button class="new-message-button" id="jump-latest" type="button" hidden>New messages · Jump to latest</button>
+        </footer>
+      </section>
+
+      <aside class="composer-pane" aria-label="Write a live-chat message">
+        <div class="selection-bar">
+          <button class="icon-button" id="previous-account" type="button" aria-label="Previous channel" title="Previous channel (Alt + Up)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 14 5-5 5 5"/></svg>
+          </button>
+          <div>
+            <span class="selection-label">Sending as</span>
+            <strong id="selected-handle">Choose a channel</strong>
+            <span class="selection-meta" id="selected-meta">No channel selected</span>
+          </div>
+          <button class="icon-button" id="next-account" type="button" aria-label="Next channel" title="Next channel (Alt + Down)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </button>
+        </div>
+
+        <div class="composer-scroll">
+          <div class="empty-selection" id="empty-selection">
+            <h2>Choose a sending channel</h2>
+            <p>Select one on the left. Switch anytime without reloading live chat.</p>
+          </div>
+
+          <form class="composer" id="composer" hidden>
+            <label class="starter-field" for="starter-word">
+              <span>Start phrase</span>
+              <input id="starter-word" type="text" maxlength="80" autocomplete="off" placeholder="Phrase">
+            </label>
+            <label for="message">Message</label>
+            <textarea id="message" maxlength="200" rows="2" placeholder="Write one relevant live-chat message"></textarea>
+            <div class="message-footer">
+              <span id="character-count">0 / 200</span>
+              <span><kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send</span>
+            </div>
+            <div class="actions">
+              <fieldset class="send-size" aria-label="Accounts per send">
+                <legend>Accounts per send</legend>
+                <label>
+                  <input type="radio" name="send-size" value="1">
+                  <span>1</span>
+                </label>
+                <label>
+                  <input type="radio" name="send-size" value="3">
+                  <span>3</span>
+                </label>
+              </fieldset>
+              <span class="single-account-note" id="send-mode-note">1 selected account per send</span>
+              <button class="button secondary" type="button" id="clear">Clear</button>
+              <button class="button primary" type="submit" id="stage">Send message</button>
+            </div>
+          </form>
+
+          <div class="notice" id="notice" role="status" hidden></div>
+
+          <section class="quota-panel" aria-label="YouTube API usage today">
+            <div class="quota-head">
+              <strong>Today quota</strong>
+              <span id="quota-day">Pacific day</span>
+            </div>
+            <p id="quota-total">0 estimated units · 0 requests</p>
+          </section>
+
+          <details class="market-calendar" open>
+            <summary>
+              <span>Economic calendar</span>
+              <small id="economic-calendar-summary">Loading</small>
+            </summary>
+            <div class="market-calendar-frame">
+              <div class="economic-calendar-toolbar">
+                <span id="economic-calendar-status">Loading events</span>
+                <button class="economic-calendar-refresh" id="economic-calendar-refresh" type="button" aria-label="Refresh economic calendar" title="Refresh economic calendar">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.34 5.66M20 4v7h-7"/></svg>
+                </button>
+              </div>
+              <div class="economic-calendar-list" id="economic-calendar-list" aria-live="polite"></div>
+              <p class="economic-calendar-note">Astana time. Events: <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener noreferrer">Forex Factory</a>. Market reactions use delayed quotes and are saved locally. Not financial advice.</p>
+            </div>
+          </details>
+
+          <details class="activity-drawer">
+            <summary>Recent activity</summary>
+            <div class="activity-list" id="activity-list"></div>
+          </details>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <section class="admin-modal" id="admin-modal" role="dialog" aria-modal="true" aria-labelledby="admin-title" hidden>
+    <div class="admin-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="admin-title">Admin</h2>
+          <p id="admin-status">Account metadata</p>
+        </div>
+        <div class="admin-view-switch" role="group" aria-label="Admin list view">
+          <button class="admin-view-button is-active" type="button" data-admin-view="1" aria-pressed="true">1</button>
+          <button class="admin-view-button" type="button" data-admin-view="2" aria-pressed="false">2</button>
+        </div>
+        <div class="admin-head-actions">
+          <button class="button compact secondary" id="admin-refresh" type="button" hidden>Refresh</button>
+          <button class="button compact primary" id="admin-save" type="button" hidden>Save</button>
+          <button class="icon-button" id="admin-close" type="button" aria-label="Close admin" title="Close admin">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="admin-toolbar">
+        <label class="admin-search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="admin-search" type="search" autocomplete="off" placeholder="Search Gmail, channel, handle, notes" aria-label="Search admin accounts">
+          <kbd>/</kbd>
+        </label>
+      </div>
+      <div class="mff-single-list" id="admin-single-list"></div>
+      <div class="admin-groups" id="admin-rows"></div>
+    </div>
+  </section>
+
+  <section class="admin-modal reconnect-modal" id="reconnect-modal" role="dialog" aria-modal="true" aria-labelledby="reconnect-title" hidden>
+    <div class="reconnect-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="reconnect-title">Reconnect channel</h2>
+          <p id="reconnect-status" aria-live="polite">Choose Gmail</p>
+        </div>
+        <div class="admin-head-actions">
+          <button class="icon-button" id="reconnect-close" type="button" aria-label="Close reconnect" title="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="reconnect-body">
+        <section class="reconnect-picker" aria-labelledby="reconnect-gmail-title">
+          <h3 id="reconnect-gmail-title">Gmail</h3>
+          <div class="reconnect-gmails" id="reconnect-gmails"></div>
+        </section>
+        <section class="reconnect-picker" aria-labelledby="reconnect-channel-title">
+          <h3 id="reconnect-channel-title">YouTube channel</h3>
+          <div class="reconnect-channels" id="reconnect-channels"></div>
+        </section>
+      </div>
+      <footer class="reconnect-actions">
+        <button class="button secondary" id="reconnect-new" type="button">New Gmail</button>
+        <button class="button secondary" id="reconnect-skip" type="button" hidden>Skip</button>
+        <button class="button secondary" id="reconnect-batch" type="button">Connect all</button>
+        <button class="button primary" id="reconnect-continue" type="button" disabled>Continue</button>
+      </footer>
+    </div>
+  </section>
+
+  <section class="admin-modal" id="mff-modal" role="dialog" aria-modal="true" aria-labelledby="mff-title" hidden>
+    <div class="admin-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="mff-title">Form Rows</h2>
+          <p id="mff-status">Emails and YouTube usernames</p>
+        </div>
+        <div class="admin-head-actions">
+          <button class="icon-button" id="mff-close" type="button" aria-label="Close metadata" title="Close metadata">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="admin-toolbar">
+        <label class="admin-search">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+          <input id="mff-search" type="search" autocomplete="off" placeholder="Search Gmail, nickname, notes" aria-label="Search metadata">
+          <kbd>/</kbd>
+        </label>
+      </div>
+      <div class="mff-single-list" id="mff-single-list"></div>
+      <div class="admin-groups" id="mff-rows"></div>
+    </div>
+  </section>
+
+  <section class="admin-modal" id="form-watch-modal" role="dialog" aria-modal="true" aria-labelledby="form-watch-title" hidden>
+    <div class="form-watch-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="form-watch-title">Form Scanner</h2>
+          <p id="form-watch-status">Waiting</p>
+        </div>
+        <div class="admin-head-actions">
+          <button class="icon-button" id="form-watch-close" type="button" aria-label="Close form scanner" title="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <form class="form-watch-body" id="form-watch-form">
+        <label for="form-watch-url">YouTube livestream</label>
+        <input id="form-watch-url" type="url" autocomplete="off" placeholder="Paste YouTube live link">
+        <div class="form-watch-actions">
+          <button class="button secondary" id="form-watch-stop" type="button">Stop</button>
+          <button class="button primary" id="form-watch-start" type="submit">Start watching</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="admin-modal" id="london-forms-modal" role="dialog" aria-modal="true" aria-labelledby="london-forms-title" hidden>
+    <div class="form-watch-panel london-forms-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="london-forms-title">London Forms</h2>
+          <p id="london-forms-status">Paste YouTube livestream link</p>
+        </div>
+        <div class="admin-head-actions">
+          <button class="icon-button" id="london-forms-close" type="button" aria-label="Close London Forms" title="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <form class="form-watch-body" id="london-forms-form">
+        <label for="london-forms-url">YouTube livestream</label>
+        <input id="london-forms-url" type="url" autocomplete="off" placeholder="Paste YouTube livestream link">
+        <div class="form-watch-actions">
+          <button class="button primary" id="london-forms-submit" type="submit">Run</button>
+        </div>
+      </form>
+      <div class="london-forms-output" id="london-forms-output" hidden></div>
+    </div>
+  </section>
+
+  <section class="admin-modal" id="notifications-modal" role="dialog" aria-modal="true" aria-labelledby="notifications-title" hidden>
+    <div class="notifications-panel">
+      <header class="admin-head">
+        <div>
+          <h2 id="notifications-title">Notifications</h2>
+          <p id="notifications-status">No stream events yet</p>
+        </div>
+        <div class="admin-head-actions">
+          <button class="button compact secondary" id="notifications-sound" type="button">Sound on</button>
+          <label class="notification-volume" for="notifications-volume">
+            <span>Volume <strong id="notifications-volume-value">70%</strong></span>
+            <input id="notifications-volume" type="range" min="0" max="100" step="1" value="70">
+          </label>
+          <button class="button compact secondary" id="notifications-clear" type="button">Clear</button>
+          <button class="icon-button" id="notifications-close" type="button" aria-label="Close notifications" title="Close">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+      </header>
+      <div class="notifications-list" id="notifications-list"></div>
+    </div>
+  </section>
+  <script src="/app.js?v=app-42"></script>
+</body>
+</html>

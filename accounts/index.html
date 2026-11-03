@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Accounts · Account Control Center</title>
+  <link rel="stylesheet" href="/accounts/styles.css?v=1">
+</head>
+<body>
+  <main class="page">
+    <nav class="module-nav" aria-label="Разделы платформы">
+      <a class="active" href="/accounts/">Accounts</a>
+      <a href="/local-form/">Form Scanner</a>
+      <a href="/live/">Live Center</a>
+    </nav>
+
+    <header>
+      <div>
+        <p class="eyebrow">Account Control Center</p>
+        <h1>Google / YouTube Accounts</h1>
+        <p class="muted">Один Google OAuth-аккаунт связывается с его YouTube-каналом и тем же Gmail в локальном Chrome-профиле.</p>
+      </div>
+      <div class="head-actions">
+        <label class="button secondary file-button" for="oauth-file" id="import-label">Import OAuth JSON</label>
+        <input id="oauth-file" type="file" accept="application/json,.json" hidden>
+        <a class="button primary" id="connect" href="/oauth/start" target="oauth-connect">Connect Google account</a>
+      </div>
+    </header>
+
+    <section class="card setup" id="setup">
+      <div><span>Google OAuth</span><strong id="oauth-status">Проверка…</strong></div>
+      <div><span>Подключено</span><strong id="account-count">0</strong></div>
+      <div><span>Chrome match</span><strong id="chrome-count">0</strong></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <div>
+          <h2>Единый реестр аккаунтов</h2>
+          <p class="muted">Field 1 и Field 3 затем используются Form Scanner. Live Center использует тот же OAuth-доступ для чата YouTube.</p>
+        </div>
+        <button class="button secondary" id="refresh" type="button">Обновить</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Google account</th><th>YouTube channel</th><th>Chrome profile</th><th>Field 1</th><th>Field 3</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <div class="save-row"><button class="button primary" id="save" type="button">Save account values</button></div>
+    </section>
+
+    <section class="card info">
+      <h2>Как добавить ещё аккаунт</h2>
+      <ol>
+        <li>Нажми <strong>Connect Google account</strong> и выбери нужный Gmail.</li>
+        <li>Разреши доступ к YouTube — система сохранит refresh token локально в зашифрованном vault.</li>
+        <li>Для Form Scanner этот же Gmail должен быть уже залогинен в отдельном Chrome-профиле. Система сопоставит их по email.</li>
+      </ol>
+    </section>
+
+    <div id="message" class="message hidden"></div>
+  </main>
+  <script src="/accounts/app.js?v=1"></script>
+</body>
+</html>

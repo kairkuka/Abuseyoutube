@@ -1,0 +1,5 @@
+﻿Exact source code copied from AWS EC2 i-0ce1b3427c38e541f on 2026-09-01.
+Account metadata records included:
+45
+Removed: OAuth client files, OAuth refresh tokens, DPAPI master key, server access configuration.
+This export cannot access Google or YouTube until a new OAuth client is imported and accounts are reauthorized.

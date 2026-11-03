@@ -1,0 +1,9 @@
+{
+  "name": "form-helper-windows",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Windows Brave Google Form fill-only helper",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}
