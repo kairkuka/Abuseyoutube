@@ -29,11 +29,10 @@ const { MarketNewsTracker } = require("./market-news-tracker");
 
 const HOST = process.env.CONTROL_CENTER_HOST || (process.env.PORT ? "0.0.0.0" : "127.0.0.1");
 const PORT = Number(process.env.CONTROL_CENTER_PORT || process.env.PORT || 8790);
-const ACCESS_USER = process.env.CONTROL_CENTER_ACCESS_USER || "";
-const ACCESS_PASSWORD = process.env.CONTROL_CENTER_ACCESS_PASSWORD || "";
 const ORIGIN_SECRET = process.env.CONTROL_CENTER_ORIGIN_SECRET || "";
 const OAUTH_REDIRECT = process.env.YOUTUBE_OAUTH_REDIRECT || `http://127.0.0.1:${PORT}/oauth/callback`;
 const PUBLIC_DIR = path.join(__dirname, "public");
+const PORTAL_DIR = path.join(__dirname, "portal");
 const MANUAL_DIR = path.join(__dirname, "manual");
 const LOCAL_FORM_DIR = path.join(__dirname, "local-form");
 const ACCOUNTS_DIR = path.join(__dirname, "accounts");
@@ -669,27 +668,12 @@ function loopback(request) {
 }
 
 function authorized(request, response) {
-  const pathname = String(request.url || "").split("?", 1)[0];
-  const localManual = loopback(request) && (
-    pathname === "/manual" ||
-    pathname.startsWith("/manual/") ||
-    pathname === "/api/manual" ||
-    pathname.startsWith("/api/manual/")
-  );
-  if (localManual) return true;
   if (ORIGIN_SECRET && !loopback(request) && !sameSecret(request.headers["x-control-origin"], ORIGIN_SECRET)) {
     response.writeHead(403, headers("text/plain; charset=utf-8"));
     response.end("Forbidden");
     return false;
   }
-  if (!ACCESS_PASSWORD) return true;
-  const encoded = String(request.headers.authorization || "").match(/^Basic\s+(.+)$/i)?.[1] || "";
-  let supplied = "";
-  try { supplied = Buffer.from(encoded, "base64").toString("utf8"); } catch {}
-  if (sameSecret(supplied, `${ACCESS_USER}:${ACCESS_PASSWORD}`)) return true;
-  response.writeHead(401, { ...headers("text/plain; charset=utf-8"), "www-authenticate": 'Basic realm="Account Control", charset="UTF-8"' });
-  response.end("Authentication required");
-  return false;
+  return true;
 }
 
 function sendJson(response, status, value) {
@@ -748,8 +732,8 @@ const PUBLIC_PAGES = {
   "/about": {
     title: "Account Control Center",
     paragraphs: [
-      "Account Control Center is a private web tool for connecting YouTube channels through Google OAuth and managing livestream chat actions selected by the channel owner.",
-      "The private dashboard is protected by login. This public page exists so Google OAuth users can identify the app before granting access.",
+      "Account Control Center is a web tool for connecting YouTube channels through Google OAuth and managing livestream chat actions selected by the channel owner.",
+      "Choose the required workspace from the shared entry page before connecting any Google account. This public page exists so Google OAuth users can identify the app before granting access.",
       "Contact: kukaast95@gmail.com"
     ]
   },
@@ -758,7 +742,7 @@ const PUBLIC_PAGES = {
     paragraphs: [
       "Account Control Center uses Google OAuth to connect YouTube channels that the user chooses to authorize.",
       "The app stores basic Google account metadata, YouTube channel metadata, and an encrypted OAuth refresh token so the selected channel can stay connected without repeated sign-in.",
-      "Google user data is used only to identify the connected YouTube channel and perform YouTube actions requested inside the private dashboard. The app does not sell Google user data.",
+      "Google user data is used only to identify the connected YouTube channel and perform YouTube actions requested inside the selected workspace. The app does not sell Google user data.",
       "Users can revoke access at any time from their Google Account security settings or reconnect/remove channels inside the dashboard.",
       "Contact: kukaast95@gmail.com"
     ]
@@ -766,7 +750,7 @@ const PUBLIC_PAGES = {
   "/terms": {
     title: "Terms of Service",
     paragraphs: [
-      "Account Control Center is provided as a private management tool. Users are responsible for actions they perform through connected Google and YouTube accounts.",
+      "Account Control Center is provided as a management tool. Users are responsible for actions they perform through connected Google and YouTube accounts.",
       "Users must only connect accounts and channels they own or are authorized to manage.",
       "Use of the tool must comply with Google, YouTube, and livestream community rules.",
       "Contact: kukaast95@gmail.com"
@@ -2559,8 +2543,11 @@ const server = http.createServer(async (request, response) => {
     const localForm = url.pathname === "/local-form" || url.pathname.startsWith("/local-form/");
     const accountsPage = url.pathname === "/accounts" || url.pathname.startsWith("/accounts/");
     const live = url.pathname === "/live" || url.pathname.startsWith("/live/");
-    const directory = manual ? MANUAL_DIR : localForm ? LOCAL_FORM_DIR : accountsPage ? ACCOUNTS_DIR : PUBLIC_DIR;
-    const requested = manual
+    const portal = url.pathname === "/choose" || url.pathname.startsWith("/choose/");
+    const directory = portal ? PORTAL_DIR : manual ? MANUAL_DIR : localForm ? LOCAL_FORM_DIR : accountsPage ? ACCOUNTS_DIR : PUBLIC_DIR;
+    const requested = portal
+      ? (url.pathname === "/choose" || url.pathname === "/choose/" ? "index.html" : url.pathname.replace(/^\/choose\//, ""))
+      : manual
       ? (url.pathname === "/manual" || url.pathname === "/manual/" ? "index.html" : url.pathname.replace(/^\/manual\//, ""))
       : localForm
         ? (url.pathname === "/local-form" || url.pathname === "/local-form/" ? "index.html" : url.pathname.replace(/^\/local-form\//, ""))

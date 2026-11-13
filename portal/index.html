@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Account Control Center</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="workspace-chooser">
+    <header>
+      <p class="eyebrow">Account Control Center</p>
+      <h1>Choose workspace</h1>
+      <p class="intro">Open the environment you need. Google connections and account data stay isolated between workspaces.</p>
+    </header>
+
+    <section class="workspace-list" aria-label="Available workspaces">
+      <a class="workspace-card tradeify" id="tradeify-link" href="/">
+        <span class="workspace-heading">
+          <strong>Tradeify</strong>
+          <span>Folder 1</span>
+        </span>
+        <span class="workspace-action">Open</span>
+      </a>
+      <a class="workspace-card vest" id="vest-link" href="/">
+        <span class="workspace-heading">
+          <strong>vest</strong>
+          <span>Folder 2</span>
+        </span>
+        <span class="workspace-action">Open</span>
+      </a>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const hostname = window.location.hostname;
+      const local = hostname === "127.0.0.1" || hostname === "localhost";
+      const protocol = window.location.protocol === "https:" ? "https:" : "http:";
+      const baseDomain = hostname.startsWith("control.") ? hostname.slice("control.".length) : hostname;
+      const tradeify = local ? `${protocol}//${hostname}:8790/` : `${protocol}//${baseDomain}/`;
+      const vest = local ? `${protocol}//${hostname}:8791/` : `${protocol}//vest.${baseDomain}/`;
+      document.querySelector("#tradeify-link").href = tradeify;
+      document.querySelector("#vest-link").href = vest;
+    })();
+  </script>
+</body>
+</html>
