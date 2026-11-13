@@ -19,10 +19,10 @@ if [[ ! -s "$ARCHIVE" ]]; then
 fi
 
 if command -v dnf >/dev/null 2>&1; then
-  dnf install -y docker tar gzip curl
+  dnf install -y docker tar gzip
 elif command -v apt-get >/dev/null 2>&1; then
   apt-get update
-  apt-get install -y docker.io tar gzip curl
+  apt-get install -y docker.io tar gzip
 else
   echo "Unsupported Linux image: dnf or apt-get required" >&2
   exit 1
