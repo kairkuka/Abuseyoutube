@@ -681,6 +681,23 @@ function sendJson(response, status, value) {
   response.end(JSON.stringify(sanitizeJson(value)));
 }
 
+function workspaceLocation(request, workspace) {
+  const hostHeader = String(request.headers.host || "").trim().toLowerCase();
+  const hostname = hostHeader.replace(/:\d+$/, "").replace(/^\[|\]$/g, "");
+  const local = hostname === "127.0.0.1" || hostname === "localhost" || hostname === "::1";
+  const baseHost = hostname.startsWith("vest.")
+    ? hostname.slice("vest.".length)
+    : hostname.startsWith("control.")
+      ? hostname.slice("control.".length)
+      : hostname;
+  const forwardedProtocol = String(request.headers["x-forwarded-proto"] || "").split(",")[0].trim();
+  const protocol = forwardedProtocol === "https" || request.socket.encrypted ? "https" : "http";
+  const targetHost = local ? hostname : workspace === "vest" ? `vest.${baseHost}` : baseHost;
+  const targetPort = local ? workspace === "vest" ? "8791" : "8790" : "";
+
+  return `${protocol}://${targetHost}${targetPort ? `:${targetPort}` : ""}/live/`;
+}
+
 function friendlyErrorMessage(value) {
   const text = String(value || "").replace(/\s+/g, " ").trim();
   if (
@@ -2463,6 +2480,16 @@ const server = http.createServer(async (request, response) => {
     if (request.method === "GET" && PUBLIC_PAGES[url.pathname]) {
       const page = PUBLIC_PAGES[url.pathname];
       sendPublicPage(response, page.title, page.paragraphs);
+      return;
+    }
+    if (request.method === "GET" && (url.pathname === "/switch/tradeify" || url.pathname === "/switch/vest")) {
+      const workspace = url.pathname.endsWith("/vest") ? "vest" : "tradeify";
+      response.writeHead(302, {
+        location: workspaceLocation(request, workspace),
+        "cache-control": "no-store",
+        "referrer-policy": "no-referrer"
+      });
+      response.end();
       return;
     }
     if (!authorized(request, response)) return;
