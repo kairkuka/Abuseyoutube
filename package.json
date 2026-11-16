@@ -10,7 +10,7 @@
     "start": "node server.js",
     "bridge": "node server.js",
     "mock": "node server.js",
-    "check": "node --check server.js && node --check market-news-tracker.js && node --check bridge.js && node --check youtube-oauth.js && node --check local-form-automation.js && node --check local-form/app.js && node --check accounts/app.js && node --check public/app.js && node --check manual/app.js && node --check extension/service-worker.js",
+    "check": "node --check server.js && node --check market-news-tracker.js && node --check bridge.js && node --check youtube-oauth.js && node --check local-form-automation.js && node --check local-form/app.js && node --check accounts/app.js && node --check public/app.js && node --check public/workspace-switcher.js && node --check manual/app.js && node --check extension/service-worker.js",
     "test": "node tests/local-form-automation.test.js && node tests/oauth-identity.test.js && node tests/market-news-tracker.test.js"
   },
   "dependencies": {

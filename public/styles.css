@@ -134,7 +134,7 @@ kbd {
 .notification-volume input:disabled {
   opacity: .45;
 }
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .brand-mark {
   width: 15px;
   height: 28px;
@@ -144,6 +144,32 @@ kbd {
 }
 .brand h1 { font-size: 17px; letter-spacing: -.015em; }
 .brand p { margin-top: 1px; color: var(--muted); font-size: 12px; }
+.workspace-switcher {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  flex: 0 0 auto;
+  min-width: 148px;
+  padding: 3px;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--field);
+}
+.workspace-switch {
+  display: grid;
+  min-height: 28px;
+  place-items: center;
+  padding: 0 10px;
+  border-radius: 5px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 850;
+  line-height: 1;
+  text-decoration: none;
+}
+.workspace-switch:hover { color: var(--text); background: var(--raised); }
+.workspace-switch:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.workspace-switch.active { background: var(--blue); color: #fff; box-shadow: 0 1px 5px rgba(30, 67, 160, .45); }
+.workspace-switch[data-workspace="vest"].active { background: #227b60; box-shadow: 0 1px 5px rgba(35, 137, 106, .38); }
 .connection { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
 .connection span { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); }
 .connection.online span { background: var(--mint); box-shadow: 0 0 0 4px rgba(69, 215, 162, .11); }
@@ -1769,9 +1795,26 @@ input::placeholder, textarea::placeholder { color: #778396; opacity: 1; }
 }
 
 @media (max-width: 700px) {
-  .topbar { padding: 0 14px; }
+  .shell { grid-template-rows: 128px minmax(0, 1fr); }
+  .topbar {
+    min-height: 128px;
+    height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 7px;
+    padding: 9px 14px;
+  }
+  .brand { width: 100%; justify-content: space-between; gap: 8px; }
+  .brand-mark { width: 12px; height: 28px; }
+  .brand h1 { font-size: 15px; white-space: nowrap; }
   .brand p { display: none; }
-  .top-actions { position: static; transform: none; }
+  .workspace-switcher { min-width: 132px; }
+  .workspace-switch { padding: 0 8px; }
+  .top-actions { position: static; justify-self: start; transform: none; }
+  .right-actions { width: 100%; justify-content: flex-start; gap: 8px; }
+  .right-actions .button { flex: 0 0 auto; padding-left: 10px; padding-right: 10px; font-size: 11px; }
+  .connection { flex: 0 0 auto; padding: 0 2px; }
+  .connection strong { display: none; }
   .workspace { display: block; }
   .account-pane { min-height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
   .account-list { max-height: 270px; }
